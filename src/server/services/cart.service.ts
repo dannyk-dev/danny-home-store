@@ -1,24 +1,7 @@
-// import { redis } from "../cache/redis";
-import { z } from "zod";
-// import type { CartItem, ProductVariant } from "@prisma/client";
-import type { CartItem, ProductVariant } from "prisma/interfaces";
-import { db } from "@/server/db";
+
 import { getRedisClient } from "@/server/redis";
+import type { ICart, ICartItem } from "@/lib/schemas/cart";
 
-const cartItemSchema = z.object({
-  variantId: z.string().uuid(),
-  quantity: z.number().int().positive(),
-  unitPrice: z.number().positive(),
-  currency: z.string(),
-});
-export type ICartItem = z.infer<typeof cartItemSchema>;
-
-export interface ICart {
-  userId: string;
-  currency: string;
-  items: ICartItem[];
-  updatedAt: number;
-}
 
 const CART_TTL = 60 * 60 * 24 * 30;
 const cartKey = (userId: string) => `cart:${userId}`;

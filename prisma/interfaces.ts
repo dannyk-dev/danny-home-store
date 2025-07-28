@@ -56,7 +56,6 @@ export interface User {
   emailVerified: Date | null;
   image: string | null;
   phone: string | null;
-  passwordHash: string;
   role: Role;
   accounts?: Account[];
   sessions?: Session[];

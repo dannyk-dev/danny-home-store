@@ -7,3 +7,5 @@ export const adjustStockSchema = z.object({
   note: z.string().optional(),
   userId: z.string().uuid().optional(),
 });
+
+export type TAdjustStockSchema = z.infer<typeof adjustStockSchema>
