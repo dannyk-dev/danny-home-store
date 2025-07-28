@@ -12,6 +12,7 @@ import {
   Spacer,
   Tabs,
   Text,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import { FiBell, FiLogOut, FiUser } from "react-icons/fi";
 import Link from "next/link";
@@ -19,7 +20,8 @@ import { useRouter } from "next/router";
 import { redirect } from "next/navigation";
 import { auth } from "@/server/auth";
 import { ColorModeButton } from "@/components/ui/color-mode";
-import { PiBell } from "react-icons/pi";
+import { PiBell, PiBrowsers, PiColumns } from "react-icons/pi";
+import { AiOutlineProduct } from "react-icons/ai";
 // import {Bell} from '@phosphor-icons/react'
 // import { signOut, useSession } from "next-auth/react";
 
@@ -87,7 +89,32 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = async ({
           </Link>
         </Button>
         <Spacer />
-        <HStack position='relative'>
+
+        <Tabs.Root>
+          <Tabs.List>
+            <Tabs.Trigger value="products">
+              <ChakraLink unstyled href="/admin/products">
+                <AiOutlineProduct />
+                Products
+              </ChakraLink>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="categories">
+              <ChakraLink unstyled href="/admin/categories">
+                <Flex><PiColumns />
+                Categories</Flex>
+              </ChakraLink>
+            </Tabs.Trigger>
+            <Tabs.Trigger value="banners">
+              <ChakraLink unstyled href="/admin/banners">
+                <PiBrowsers />
+                Banners
+              </ChakraLink>
+            </Tabs.Trigger>
+          </Tabs.List>
+        </Tabs.Root>
+
+        <Spacer />
+        <HStack position="relative">
           <IconButton aria-label="Notifications" variant="ghost">
             {/* <Bell /> */}
             <PiBell />
@@ -95,7 +122,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = async ({
           <ColorModeButton />
 
           <Menu.Root>
-            <Menu.Trigger asChild>
+            <Menu.Trigger rounded="full" focusRing="outside">
               <Avatar.Root variant="subtle">
                 <Avatar.Fallback name="Test User" />
               </Avatar.Root>
