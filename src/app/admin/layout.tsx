@@ -7,8 +7,8 @@ import {
   HStack,
   IconButton,
   Menu,
-
   MenuItem,
+  Portal,
   Spacer,
   Tabs,
   Text,
@@ -18,9 +18,9 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { redirect } from "next/navigation";
 import { auth } from "@/server/auth";
-import { RiBillFill } from "react-icons/ri";
 import { ColorModeButton } from "@/components/ui/color-mode";
-import {Bell} from '@phosphor-icons/react'
+import { PiBell } from "react-icons/pi";
+// import {Bell} from '@phosphor-icons/react'
 // import { signOut, useSession } from "next-auth/react";
 
 const NAV_TABS = [
@@ -31,55 +31,95 @@ const NAV_TABS = [
   { href: "/admin/banners", label: "Banners" },
 ];
 
-const AdminLayout: React.FC<{ children: React.ReactNode }> = async ({ children }) => {
+const links = [
+  {
+    title: "Profile",
+    href: "#",
+  },
+  {
+    title: "Sign out",
+    href: "#",
+  },
+];
+
+const AdminLayout: React.FC<{ children: React.ReactNode }> = async ({
+  children,
+}) => {
   // const { pathname } = useRouter();
   const session = await auth();
   // const activeIndex = NAV_TABS.findIndex((t) => pathname.startsWith(t.href));
   // const bg = useColorModeValue("white", "gray.900");
 
   if (!session) {
-    redirect('/auth/signin')
+    redirect("/auth/signin");
   }
 
   // const { data: session } = useSession();
   const userName = "Admin"; // session?.user.name ?? "Admin";
 
   return (
-    <Flex direction='column' minH="100vh">
-      <Container maxWidth='8/12' marginX='auto' background='bg.muted' shadow={'sm'}  marginTop='5' rounded={12} position='sticky' top={0} display='flex' alignItems={'center'} left={0} right={0} p='5'>
-        <Button asChild variant='outline' size='xl' borderColor='white'>
-          <Link href="/admin" passHref  >
-          <HStack as="a" spaceX={0} _hover={{ textDecor: "none" }}>
-            <Text fontWeight="bold" fontSize="lg" color="red.500">
-              Danny
-            </Text>
-            <Text fontWeight="extrabold" fontSize="lg">
-              Home
-            </Text>
-          </HStack>
-        </Link>
+    <Flex direction="column" minH="100vh">
+      <Container
+        maxWidth="8/12"
+        marginX="auto"
+        background="bg.muted"
+        shadow={"sm"}
+        marginTop="5"
+        rounded={12}
+        position="sticky"
+        top={0}
+        display="flex"
+        alignItems={"center"}
+        left={0}
+        right={0}
+        p="5"
+      >
+        <Button asChild variant="outline" size="xl" borderColor="white">
+          <Link href="/admin" passHref>
+            <HStack as="a" spaceX={0} _hover={{ textDecor: "none" }}>
+              <Text fontWeight="bold" fontSize="lg" color="red.500">
+                Danny
+              </Text>
+              <Text fontWeight="extrabold" fontSize="lg">
+                Home
+              </Text>
+            </HStack>
+          </Link>
         </Button>
         <Spacer />
-        <HStack >
+        <HStack position='relative'>
           <IconButton aria-label="Notifications" variant="ghost">
-            <Bell />
+            {/* <Bell /> */}
+            <PiBell />
           </IconButton>
           <ColorModeButton />
 
-          {/* <Menu>/ */}
-            {/* <MenuButton as={Avatar} size="sm" cursor="pointer" name={userName} /> */}
-            {/* <MenuList> */}
-              {/* <MenuItem icon={<FiUser />}>Profile</MenuItem> */}
-              {/* <MenuDivider /> */}
-              {/* <MenuItem icon={<FiLogOut />} onClick={() => signOut()}>Logout</MenuItem> */}
-            {/* </MenuList> */}
-          {/* </Menu> */}
+          <Menu.Root>
+            <Menu.Trigger asChild>
+              <Avatar.Root variant="subtle">
+                <Avatar.Fallback name="Test User" />
+              </Avatar.Root>
+            </Menu.Trigger>
+            <Portal>
+              <Menu.Positioner>
+                <Menu.Content>
+                  {links.map((link) => (
+                    <Menu.Item key={link.href} asChild value={link.title}>
+                      <a href={link.href} target="_blank" rel="noreferrer">
+                        {link.title}
+                      </a>
+                    </Menu.Item>
+                  ))}
+                </Menu.Content>
+              </Menu.Positioner>
+            </Portal>
+          </Menu.Root>
         </HStack>
       </Container>
 
-        {children}
+      {children}
     </Flex>
   );
 };
 
-export default AdminLayout
+export default AdminLayout;
