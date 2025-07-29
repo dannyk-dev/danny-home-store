@@ -18,6 +18,7 @@ export const productVariantInput = z.object({
   heightMm: z.number().int().positive().optional(),
   lengthMm: z.number().int().positive().optional(),
   active: z.boolean().default(true),
+  productId: z.string()
 });
 
 export const createProductSchema = z.object({

@@ -13,6 +13,8 @@ import { ZodError } from "zod";
 
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
+import type { User } from "prisma/interfaces";
+import { Role } from "@prisma/client";
 
 /**
  * 1. CONTEXT
@@ -128,6 +130,29 @@ export const protectedProcedure = t.procedure
       ctx: {
         // infers the `session` as non-nullable
         session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  });
+
+export const adminProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(({ ctx, next }) => {
+    const user = ctx.session?.user as User | null;
+
+    if (!user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    if (user.role !== Role.ADMIN) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+      });
+    }
+
+    return next({
+      ctx: {
+        ...ctx,
+        session: { ...ctx.session, user },
       },
     });
   });

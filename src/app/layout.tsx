@@ -1,10 +1,11 @@
 import "@/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Provider } from "@/components/ui/provider";
+import { createSystem, defaultConfig } from "@chakra-ui/react";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -16,13 +17,20 @@ const geist = Geist({
   subsets: ["latin"],
 });
 
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700']
+})
+
+
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={geist.className}>
-        <Provider>
+      <body className={inter.className}>
+        <Provider >
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </Provider>
       </body>
